@@ -2,10 +2,17 @@
   <button type="button" class="nav-btn" (click)="showPrevious()"><</button>
 
   <div class="card-wrapper">
-    <div class="card" (click)="flipCard()">
-      {{ displayText() }}
+    
+    <div class="card" [class.flip]="!showFront" (click)="flipCard()">
+      <div *ngIf="showFront" class="card-front">
+        {{ frontText }}
+      </div>
+      <div *ngIf="!showFront" class="card-back">
+        {{ backText }}
+      </div>
     </div>
-    <div class="controls" (click)="flipCard()">
+    
+    <div class="controls">
       <button class="ctrl-btn" (click)="addCard('test', 'post')">
         <img src="./assets/add.png" />
       </button>
@@ -15,10 +22,11 @@
       <button class="ctrl-btn">
         <img src="./assets/edit.png" />
       </button>
-      <button class="ctrl-btn">
+      <button class="ctrl-btn" (click)="deleteCard()">
         <img src="./assets/delete.png" />
       </button>
     </div>
+
   </div>
 
   <button type="button" class="nav-btn" (click)="showNext()">></button>

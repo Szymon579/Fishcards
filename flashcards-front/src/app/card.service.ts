@@ -24,5 +24,9 @@ export class CardService {
     console.log(card);
     return this.http.post<Card>(this.cardsUrl, card, this.httpOptions);
   }
+
+  deleteCard(id: number): Observable<Card> {
+    return this.http.delete<Card>(this.cardsUrl + `/${id}`);
+  }
   
 }

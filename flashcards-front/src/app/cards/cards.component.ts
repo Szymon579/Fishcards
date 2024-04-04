@@ -52,11 +52,16 @@ export class CardsComponent implements OnInit {
       backText: backText
     }
 
-    console.log(newCard);
-    
-    //this.cards.push(newCard);
     this.cardService.addCard(newCard)
       .subscribe(card => this.cards.push(newCard));
+  }
+
+  deleteCard(): void {
+    const cardId = Number(this.cards[this.index].id);
+
+    this.cards = this.cards.filter(card => card.id !== cardId);
+    this.cardService.deleteCard(cardId).subscribe();
+    this.showPrevious();
   }
 
   setText(): void {
