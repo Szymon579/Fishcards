@@ -1,0 +1,47 @@
+
+  .bar-div {
+    background-color: rgb(11, 133, 133);
+    height: 100px; /* Fixed height for the footer */
+    display: flex;
+
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    
+  }
+  
+  .title {
+    color: white;
+    margin: 10px;
+    font-size: 36px;
+    text-shadow: 10px 8px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .bar-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 10px; /* Adjust as needed */
+    margin: 10px;
+  }
+
+
+  .nav-btn {
+    padding: 10px 20px; /* Padding inside the buttons */
+    font-size: 28px; /* Font size of the buttons */
+    background-color: #007bff; /* Button background color */
+    color: white; /* Button text color */
+    border: none; /* No border */
+    cursor: pointer; 
+    border-radius: 15px; 
+    box-shadow: 10px 8px 6px rgba(0, 0, 0, 0.1);
+
+  }
+  
+  .nav-btn:hover {
+    background-color: #0056b3; /* Darker background color on hover */
+  }

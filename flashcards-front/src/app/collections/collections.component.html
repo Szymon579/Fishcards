@@ -1,0 +1,38 @@
+
+
+
+<div class="flex-wrapper">
+    <li *ngFor="let collection of collections">
+      <div class="collection-wrapper">
+        <div class="title-wrapper" routerLink="/collections/{{collection.id}}">
+          <div class="title-div">
+            {{collection.title}}
+          </div>
+        </div>
+        <div class="controls-div"> 
+          <button class="ctrl-btn">
+              <img src="./assets/edit.png">
+          </button>
+          <button class="ctrl-btn">
+              <img src="./assets/share.png">
+          </button>
+          <button class="ctrl-btn" (click)="deleteCollection(collection.id)">
+              <img src="./assets/delete.png">
+          </button>
+        </div>
+      </div>
+    </li>
+    
+    <div class="add-wrapper">
+      <div class="title-wrapper">
+          <input #newCollection placeholder="New Collection"/>       
+      </div>
+        <div class="controls-div" routerLink="/collections/">
+          <button class="ctrl-btn" (click)="addCollection(newCollection.value); newCollection.value=''">
+            <img src="./assets/add.png">
+        </button>
+        </div>
+        
+
+  </div>
+  
