@@ -9,6 +9,7 @@ import { CollectionsComponent } from './collections/collections.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgFor } from '@angular/common';
 import { TopBarComponent } from './top-bar/top-bar.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { TopBarComponent } from './top-bar/top-bar.component';
     CardsComponent,
     CollectionsComponent,
     TopBarComponent,
+    LoginComponent,
     
   ],
   imports: [
