@@ -1,29 +1,65 @@
 <div class="wrapper">
-  <div class="form">
+  
+  
+  <div *ngIf="isLogin" class="form">
     
     <div class="title-div">Email:</div>
     <div class="input-div">
-      <input #newCollection placeholder="omamale@gmail.com" />
+      <input #loginEmail/>
     </div>
     
     <div class="title-div">Password:</div>
     <div class="input-div">
-      <input #newCollection placeholder="suchStr0ngpaSSword123" />
-    </div>
-
-    <div class="title-div">Confirm password:</div>
-    <div class="input-div">
-      <input #newCollection placeholder="suchStr0ngpaSSword123" />
+      <input #loginPassword/>
     </div>
 
     <p></p>
     <div class="input-div">
-        <button class="ctrl-btn">Login</button>
+        <button class="ctrl-btn" (click)="login(
+            loginEmail.value,
+            loginPassword.value
+        )">Login</button>
     </div>
 
     <div class="input-div">
-        <button class="ctrl-btn">Register</button>
+        <button class="ctrl-btn" (click)="displayRegister()">Register</button>
     </div>
 
   </div>
+
+  <div *ngIf="!isLogin" class="form">
+    
+    <div class="title-div">Email:</div>
+    <div class="input-div">
+      <input #registerEmail/>
+    </div>
+    
+    <div class="title-div">Password:</div>
+    <div class="input-div">
+      <input #registerPassword/>
+    </div>
+
+    <div class="title-div">Confirm password:</div>
+    <div class="input-div">
+      <input #registerConfirmPassword/>
+    </div>
+
+    <p></p>
+
+    <div class="input-div">
+        <button class="ctrl-btn" (click)="register(
+              registerEmail.value, 
+              registerPassword.value,
+              registerConfirmPassword.value
+              )">
+          Register
+        </button>
+    </div>
+
+  </div>
+
+  <div *ngIf="error" class="form">
+    <div class="error-div">Invalid form!</div>
+  </div>
+
 </div>

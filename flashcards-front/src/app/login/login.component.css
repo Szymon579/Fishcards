@@ -3,6 +3,7 @@
     width: 500px;
     height: 600px;
     display: flex;
+    flex-direction: column;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -71,6 +72,7 @@
 
   input {
     border: none;
+    border-bottom: 2px solid rgb(134, 134, 134);
     margin: 15px;
     margin-top: 0px;
     width: 100%;
@@ -82,4 +84,14 @@
 
   input:focus {
     outline: none;
+  }
+
+  .error-div {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    justify-content: center;
+    width: 100%;
+    height: fit-content;
+    font-size: 20px;
+    color: red;
   }

@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 using api.Dtos.Account;
 using api.Interfaces;
 using api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
-    [Route("api/accout")]
+    [Route("api/auth")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -61,7 +62,7 @@ namespace api.Controllers
 
                 var user = new User
                 {
-                    UserName = registerDto.Username,
+                    UserName = registerDto.Email,
                     Email = registerDto.Email
                 };
 
@@ -94,6 +95,26 @@ namespace api.Controllers
             {
                 return StatusCode(500, ex);
             }
+        }
+
+
+        [HttpGet("authorized")]
+        [Authorize]
+        public async Task<IActionResult> GetForAuthorized()
+        {
+            return Ok(new LoginDto{
+                Password = "password123",
+                Email = "ligma@balls.com"
+            });
+        }
+
+        [HttpGet("unauthorized")]
+        public async Task<IActionResult> GetForUnautorized()
+        {
+            return Ok(new LoginDto{
+                Password = "password123",
+                Email = "ligma@balls.com"
+            });
         }
     }
 }
