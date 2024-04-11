@@ -8,6 +8,6 @@ namespace api.Models
 {
     public class User : IdentityUser
     {
-        public List<Collection> collections { get; set; } = new List<Collection>();
+        public List<Collection> Collections { get; set; } = new List<Collection>();
     }
 }

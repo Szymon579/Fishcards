@@ -33,7 +33,7 @@ namespace api.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet("byuser/")]
+        [HttpGet("authorized")]
         [Authorize]
         public async Task<IActionResult> GetUserCollections()
         {
@@ -45,7 +45,6 @@ namespace api.Controllers
         
         
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             var collections = await _collectionRepo.GetAllAsync();
@@ -81,7 +80,7 @@ namespace api.Controllers
             return CreatedAtAction(nameof(GetById), new {id = collectionModel.Id}, collectionModel.ToCollectionDto());
         }
 
-        [HttpPost("byuser")]
+        [HttpPost("authorized")]
         [Authorize]
         public async Task<IActionResult> CreateByUser([FromBody] CreateCollectionDto collectionDto) 
         {
@@ -101,7 +100,7 @@ namespace api.Controllers
                 return StatusCode(500, "Could not create for user");
             }
 
-            return Ok(collection);
+            return Ok(collection.ToCollectionDto());
         }
 
         [HttpDelete]
@@ -117,8 +116,6 @@ namespace api.Controllers
 
             return NoContent();
         }
-
-
 
     }
 }
