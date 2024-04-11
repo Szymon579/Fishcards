@@ -26,67 +26,67 @@ namespace api.Controllers
         private readonly ICollectionRepository _collectionRepo;
         private readonly UserManager<User> _userManager;
         
-        public CollectionController(ICollectionRepository collectionRepo, 
-                                    UserManager<User> userManager) 
+        public CollectionController(ICollectionRepository collectionRepo, UserManager<User> userManager) 
         {
             _collectionRepo = collectionRepo;
             _userManager = userManager;
         }
 
-        [HttpGet("authorized")]
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetUserCollections()
         {
             var username = User.GetUsername();
             var user = await _userManager.FindByNameAsync(username);
+
+            if(user == null)
+            {
+                return BadRequest("User not found");
+            }
+
             var userCollections = await _collectionRepo.GetUserCollections(user);
-            return Ok(userCollections);
+            return Ok(userCollections.Select(c => c.ToCollectionDto()));
         }
         
-        
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("{collectionId}")]
+        [Authorize]
+        public async Task<IActionResult> GetById([FromRoute] int collectionId)
         {
-            var collections = await _collectionRepo.GetAllAsync();
-                
-            var collectionsDto = collections.Select(s => s.ToCollectionDto());
+            var username = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(username);
             
-            return Ok(collectionsDto);
-        }
+            if(user == null)
+            {
+                return BadRequest("User not found");
+            }
 
-        
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
-        {
-            var collectionModel = await _collectionRepo.GetByIdAsync(id);
+            var collection = await _collectionRepo.GetByIdAsync(collectionId);
             
-            if (collectionModel == null)
+            if (collection == null)
             {
                 return NotFound();
             }
 
-            var collectionDto = collectionModel.ToCollectionWithCardsDto();
+            if(user.Id != collection.UserId)
+            {
+                return BadRequest("User not authorized for this collection");
+            }
 
-            return Ok(collectionDto);
+            return Ok(collection.ToCollectionWithCardsDto());
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateCollectionDto collectionDto) 
-        {
-            var collectionModel = collectionDto.ToCollectionFromCreateDto();
-            await _collectionRepo.CreateAsync(collectionModel);
-
-            return CreatedAtAction(nameof(GetById), new {id = collectionModel.Id}, collectionModel.ToCollectionDto());
-        }
-
-        [HttpPost("authorized")]
         [Authorize]
         public async Task<IActionResult> CreateByUser([FromBody] CreateCollectionDto collectionDto) 
         {
             var username = User.GetUsername();
             var user = await _userManager.FindByNameAsync(username);
             
+            if(user == null)
+            {
+                return BadRequest("User not found");
+            }
+
             var collection = new Collection
             {
                 UserId = user.Id,
@@ -97,24 +97,40 @@ namespace api.Controllers
 
             if(collection == null)
             {
-                return StatusCode(500, "Could not create for user");
+                return StatusCode(500, "Could not create collection");
             }
 
             return Ok(collection.ToCollectionDto());
         }
 
         [HttpDelete]
-        [Route("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        [Route("{collectionId}")]
+        [Authorize]
+        public async Task<IActionResult> Delete([FromRoute] int collectionId)
         {
-            var collectionModel = await _collectionRepo.DeleteAsync(id);
-
-            if (collectionModel == null)
+            var username = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(username);
+            
+            if(user == null)
             {
-                return NotFound();
+                return BadRequest("User not found");
+            }
+            
+            var collection = await _collectionRepo.GetByIdAsync(collectionId);
+
+            if (collection == null)
+            {
+                return BadRequest("Collection does not exist");
+            }
+            
+            if(user.Id != collection.UserId)
+            {
+                return BadRequest("User not authorized for this collection");
             }
 
-            return NoContent();
+            await _collectionRepo.DeleteAsync(collectionId);
+
+            return Ok(collection.ToCollectionDto());
         }
 
     }
