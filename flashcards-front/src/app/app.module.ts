@@ -6,10 +6,11 @@ import { AppComponent } from './app.component';
 import { NaviComponent } from './navi/navi.component';
 import { CardsComponent } from './cards/cards.component';
 import { CollectionsComponent } from './collections/collections.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgFor } from '@angular/common';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { LoginComponent } from './login/login.component';
+import { AuthInterceptor } from './auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,13 @@ import { LoginComponent } from './login/login.component';
     NgFor,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -12,8 +12,8 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240408202324_newDB")]
-    partial class newDB
+    [Migration("20240411100201_UserCollections1")]
+    partial class UserCollections1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,13 +54,13 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f9ec8993-ea90-47d2-a62b-0a5aeadc2271",
+                            Id = "a445452e-fb3f-4bcf-84ce-0c22cb9fe40c",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "88bf886e-1303-4e7d-b545-f7ded846fb0d",
+                            Id = "4cbb5cb4-c225-4de3-823b-707c7e649a7e",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -210,7 +210,13 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Collections");
                 });
@@ -344,7 +350,23 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Models.Collection", b =>
                 {
+                    b.HasOne("api.Models.User", "user")
+                        .WithMany("collections")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("api.Models.Collection", b =>
+                {
                     b.Navigation("Cards");
+                });
+
+            modelBuilder.Entity("api.Models.User", b =>
+                {
+                    b.Navigation("collections");
                 });
 #pragma warning restore 612, 618
         }

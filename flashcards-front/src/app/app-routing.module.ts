@@ -5,7 +5,7 @@ import { CardsComponent } from './cards/cards.component';
 import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: "/collections", pathMatch: "full"},
+  {path: '', redirectTo: "/login", pathMatch: "full"},
   {path: 'collections', component: CollectionsComponent},
   {path: 'collections/:id', component: CardsComponent},
   {path: 'login', component: LoginComponent}

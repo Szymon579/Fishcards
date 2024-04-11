@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using api.Data;
 using api.Interfaces;
@@ -32,6 +33,14 @@ namespace api.Repository
             return collectionModel;
         }
 
+        public async Task<Collection> CreateByUser(Collection collection)
+        {
+            await _context.Collections.AddAsync(collection);
+            await _context.SaveChangesAsync();
+
+            return collection;
+        }
+
         public async Task<Collection?> DeleteAsync(int id)
         {
             var collectionModel = await _context.Collections.FirstOrDefaultAsync(x => x.Id == id);
@@ -55,6 +64,18 @@ namespace api.Repository
         public async Task<Collection?> GetByIdAsync(int id)
         {
             return await _context.Collections.Include(x => x.Cards).FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<List<Collection>> GetUserCollections(User user)
+        {
+            return await _context.Collections.Where(u => u.UserId == user.Id)
+                .Select(collection => new Collection
+                {
+                    Id = collection.Id,
+                    UserId = collection.UserId,
+                    Title = collection.Title,
+                    Cards = collection.Cards
+                }).ToListAsync();
         }
     }
 }
