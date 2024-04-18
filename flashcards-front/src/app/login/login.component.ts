@@ -33,7 +33,7 @@ export class LoginComponent {
     }
 
     this.authService.login(user).subscribe((user: User) => {
-      localStorage.setItem("authToken", user.token);
+      localStorage.setItem("token", user.token);
       console.log("Logged in succesfully!");
       this.router.navigateByUrl("collections");
     });

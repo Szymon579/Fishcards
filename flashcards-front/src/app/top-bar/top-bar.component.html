@@ -1,6 +1,7 @@
 <div class="bar-div">
     <h1 class="title">Flashcards</h1>
     <div class="buttons">
-        <button type="button" class="nav-btn" routerLink="/login">Log in</button>
+        <button *ngIf="!isLoggedIn()"type="button" class="nav-btn" routerLink="/login">Log in</button>
+        <button *ngIf="isLoggedIn()" type="button" class="nav-btn" (click)="logout()" routerLink="/login">Log out</button>
     </div>
 </div>

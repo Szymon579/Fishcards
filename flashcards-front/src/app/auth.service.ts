@@ -17,7 +17,16 @@ export class AuthService {
   }
 
   login(user: User): Observable<User> {
-    return this.http.post<User>(this.authUrl + '/login', user);
+    //ocalStorage.setItem("token", user.token);
+    return this.http.post<User>(this.authUrl + '/login', user)
+  }
+
+  isLoggedIn(): boolean {
+    return localStorage.getItem("token") != null;
+  }
+
+  logout(): void {
+    localStorage.removeItem("token");
   }
 
 }

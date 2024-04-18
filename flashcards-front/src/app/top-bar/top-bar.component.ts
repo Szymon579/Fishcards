@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../auth.service';
+
 
 @Component({
   selector: 'app-top-bar',
@@ -6,5 +8,13 @@ import { Component } from '@angular/core';
   styleUrl: './top-bar.component.css'
 })
 export class TopBarComponent {
+  constructor(private authService: AuthService) {}
 
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
+
+  logout(): void {
+    this.authService.logout();
+  }
 }

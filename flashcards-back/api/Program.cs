@@ -47,7 +47,7 @@ builder.Services.AddSwaggerGen(option =>
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AltConnection"));
 });
 
 builder.Services.AddIdentity<User, IdentityRole>(options => 
