@@ -11,13 +11,18 @@ import { Collection } from '../collection';
   styleUrl: './cards.component.css'
 })
 export class CardsComponent implements OnInit {
-  
   showFront: boolean = true;
   frontText: string | undefined = "Front of the flashcard";
   backText: string | undefined = "Back of the flashcard";
   cards: Card[] = [];
   index: number = 0;
+  
   addingCard: boolean = false;
+  addFront: string = "";
+  addBack: string = "";
+
+  editingCard: boolean = false;
+
 
   constructor(
     private cardService: CardService, 
@@ -40,7 +45,6 @@ export class CardsComponent implements OnInit {
   }
 
   addCard(frontText: string, backText: string): void {
-    this.addingCard = true;
     
     if(!frontText || !backText) {return;}
     
@@ -58,8 +62,27 @@ export class CardsComponent implements OnInit {
     this.cardService.addCard(newCard)
       .subscribe(() => this.cards.push(newCard));
 
-    
+    this.addingCard = false;
   }
+
+  editCard(): void {
+    if(this.editingCard) {
+        const newCard: Card = {
+          id: this.cards.at(this.index)!.id,
+          collectionId: this.cards.at(this.index)!.collectionId,
+          frontText: this.frontText!,
+          backText: this.backText!
+        };
+
+        this.cardService.editCard(this.cards.at(this.index)!.id, newCard)
+          .subscribe(() => console.log("card edited"));
+        
+      }
+    
+    this.editingCard = !this.editingCard
+    console.log("editing"); 
+  }
+
 
   deleteCard(): void {
     const cardId = Number(this.cards[this.index].id);

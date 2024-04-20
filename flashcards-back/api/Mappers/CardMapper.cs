@@ -29,5 +29,14 @@ namespace api.Mappers
                 CollectionId = cardDto.CollectionId
             };
         }
+
+        public static Card ToCardFromUpdateDto(this UpdateCardDto cardDto)
+        {
+            return new Card
+            {
+                FrontText = cardDto.FrontText,
+                BackText = cardDto.BackText,
+            };
+        }
     }
 }

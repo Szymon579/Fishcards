@@ -25,6 +25,10 @@ export class CardService {
     return this.http.post<Card>(this.cardsUrl, card, this.httpOptions);
   }
 
+  editCard(id: number, card: Card): Observable<Card> {
+    return this.http.put<Card>(this.cardsUrl + `/${id}`, card, this.httpOptions);
+  }
+
   deleteCard(id: number): Observable<Card> {
     return this.http.delete<Card>(this.cardsUrl + `/${id}`);
   }

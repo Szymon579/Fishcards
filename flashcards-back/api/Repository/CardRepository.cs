@@ -54,5 +54,22 @@ namespace api.Repository
         {
             return await _context.Cards.FirstOrDefaultAsync(c => c.Id == id);
         }
+
+        public async Task<Card?> UpdateAsync(int id, Card card)
+        {
+            var existingCard = await _context.Cards.FindAsync(id);
+
+            if(existingCard == null)
+            {
+                return null;
+            }
+                
+            existingCard.FrontText = card.FrontText;
+            existingCard.BackText = card.BackText;
+
+            await _context.SaveChangesAsync();
+
+            return existingCard;
+        }
     }
 }

@@ -3,17 +3,7 @@
 
   <div class="card-wrapper">
     
-    <div *ngIf="addingCard" class="card" [class.flip]="!showFront" (click)="flipCard()">
-      <div *ngIf="showFront" class="card-front">
-        <textarea #newFront placeholder="Front text"></textarea>
-      </div>
-      <div *ngIf="!showFront" class="card-back">
-        <input #newBack placeholder="Back text">
-      </div>
-    </div>
-
-    
-    <div *ngIf="!addingCard" class="card" [class.flip]="!showFront" (click)="flipCard()">
+    <div *ngIf="!editingCard" class="card" [class.flip]="!showFront" (click)="flipCard()">
       <div *ngIf="showFront" class="card-front">
         {{ frontText }}
       </div>
@@ -22,14 +12,29 @@
       </div>
     </div>
     
-    <div class="controls">
-      <button class="ctrl-btn" (click)="addCard('test', 'post')">
+    <div *ngIf="editingCard" class="card" [class.flip]="!showFront" (click)="flipCard()">
+      <div *ngIf="showFront" class="card-front">
+        <textarea #frontTextArea (focusout)="this.frontText = frontTextArea.value" value="{{frontText}}" (click)="$event.stopPropagation()">
+          {{frontTextArea.focus()}}
+        </textarea>
+        
+      </div>
+      <div *ngIf="!showFront" class="card-back">
+        <textarea #backTextArea (focusout)="this.backText = backTextArea.value" value="{{backText}}" (click)="$event.stopPropagation()">
+          {{backTextArea.focus()}}
+        </textarea>
+      </div>
+    </div>
+
+    
+    <div *ngIf="!addingCard" class="controls">
+      <button class="ctrl-btn" (click)="addingCard = true">
         <img src="./assets/add.png" />
       </button>
       <button class="ctrl-btn">
         <img src="./assets/hide.png" />
       </button>
-      <button class="ctrl-btn">
+      <button class="ctrl-btn" (click)="editCard()" [class.toggled]="editingCard">
         <img src="./assets/edit.png" />
       </button>
       <button class="ctrl-btn" (click)="deleteCard()">

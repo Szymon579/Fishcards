@@ -96,6 +96,20 @@ namespace api.Controllers
             return Ok(cardModel.ToCardDto());
         }
 
+        [HttpPut]
+        [Route("{cardId}")]
+        [Authorize]
+        public async Task<IActionResult> Update([FromRoute] int cardId, [FromBody] UpdateCardDto cardDto)
+        {
+            var card = await _cardRepo.UpdateAsync(cardId, cardDto.ToCardFromUpdateDto());
+
+            if(card == null)
+            {
+                return NotFound("Card not found");
+            }
+
+            return Ok(card.ToCardDto());
+        }
 
         [HttpDelete]
         [Route("{cardId}")]

@@ -12,6 +12,7 @@ namespace api.Interfaces
         Task<Card?> GetByIdAsync(int id);
         Task<List<Card>>? GetByCollectionIdAsync(int collectionId);
         Task<Card> CreateAsync(Card card);
+        Task<Card?> UpdateAsync(int id, Card card);
         Task<Card?> Delete(int id);
     }
 }
