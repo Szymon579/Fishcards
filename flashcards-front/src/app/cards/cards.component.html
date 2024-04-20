@@ -3,7 +3,17 @@
 
   <div class="card-wrapper">
     
-    <div class="card" [class.flip]="!showFront" (click)="flipCard()">
+    <div *ngIf="addingCard" class="card" [class.flip]="!showFront" (click)="flipCard()">
+      <div *ngIf="showFront" class="card-front">
+        <textarea #newFront placeholder="Front text"></textarea>
+      </div>
+      <div *ngIf="!showFront" class="card-back">
+        <input #newBack placeholder="Back text">
+      </div>
+    </div>
+
+    
+    <div *ngIf="!addingCard" class="card" [class.flip]="!showFront" (click)="flipCard()">
       <div *ngIf="showFront" class="card-front">
         {{ frontText }}
       </div>

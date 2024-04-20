@@ -17,6 +17,7 @@ export class CardsComponent implements OnInit {
   backText: string | undefined = "Back of the flashcard";
   cards: Card[] = [];
   index: number = 0;
+  addingCard: boolean = false;
 
   constructor(
     private cardService: CardService, 
@@ -39,10 +40,12 @@ export class CardsComponent implements OnInit {
   }
 
   addCard(frontText: string, backText: string): void {
+    this.addingCard = true;
+    
     if(!frontText || !backText) {return;}
     
     const collId = Number(this.route.snapshot.paramMap.get("id"));
-    console.log("collectino id: " + collId);
+    console.log("collection id: " + collId);
     
     const newCard: Card = 
     {
@@ -53,7 +56,9 @@ export class CardsComponent implements OnInit {
     }
 
     this.cardService.addCard(newCard)
-      .subscribe(card => this.cards.push(newCard));
+      .subscribe(() => this.cards.push(newCard));
+
+    
   }
 
   deleteCard(): void {

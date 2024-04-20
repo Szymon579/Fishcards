@@ -100,3 +100,25 @@ img {
 .nav-btn:hover {
   background-color: #0056b3; /* Darker background color on hover */
 }
+
+input {
+  border: none;
+  margin: 0px;
+  width: 100%;
+  height: 70%;
+  font-size: 24px;
+  height: 100%;
+}
+
+input:focus {
+  outline: none;
+}
+
+textarea {
+  border: none;
+  margin: 0px;
+  width: 100%;
+  height: 70%;
+  font-size: 24px;
+  height: 100%;
+}

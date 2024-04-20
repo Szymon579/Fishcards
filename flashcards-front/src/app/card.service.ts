@@ -8,7 +8,7 @@ import { Observable, map, pipe } from 'rxjs';
 })
 export class CardService {
   private cardsUrl = "http://localhost:5243/api/cards";
-  private cardsByCollectionUrl = "http://localhost:5243/api/cards/collection";
+  private cardsByCollectionUrl = "http://localhost:5243/api/cards";
   httpOptions = {
     headers: new HttpHeaders({"Content-type": "application/json"})
   };
