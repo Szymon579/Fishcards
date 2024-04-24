@@ -133,7 +133,7 @@ namespace api.Controllers
 
             var collection = await _collectionRepo.GetByIdAsync(card.CollectionId);
             
-            if(user.Id != collection.UserId)
+            if(user.Id != collection.UserId) 
             {
                 return BadRequest("Not authorized for this card");
             }

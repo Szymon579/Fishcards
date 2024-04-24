@@ -77,5 +77,21 @@ namespace api.Repository
                     Cards = collection.Cards
                 }).ToListAsync();
         }
+
+        public async Task<Collection?> UpdateAsync(int id, Collection collection)
+        {
+            var existingCollection = await _context.Collections.FindAsync(id);
+
+            if(existingCollection == null)
+            {
+                return null;
+            }
+
+            existingCollection.Title = collection.Title;
+
+            await _context.SaveChangesAsync();
+
+            return existingCollection;
+        }
     }
 }

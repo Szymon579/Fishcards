@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos.CardsCollection;
+using api.Dtos.Collection;
 using api.Models;
 
 namespace api.Mappers
@@ -29,6 +30,14 @@ namespace api.Mappers
         }
     
         public static Collection ToCollectionFromCreateDto(this CreateCollectionDto collectionDto) 
+        {
+             return new Collection
+             {
+                Title = collectionDto.Title
+             };   
+        }
+
+        public static Collection ToCollectionFromUpdateDto(this UpdateCollectionDto collectionDto) 
         {
              return new Collection
              {

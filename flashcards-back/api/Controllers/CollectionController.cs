@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Card;
 using api.Dtos.CardsCollection;
+using api.Dtos.Collection;
 using api.Extensions;
 using api.Interfaces;
 using api.Mappers;
@@ -101,6 +102,29 @@ namespace api.Controllers
             }
 
             return Ok(collection.ToCollectionDto());
+        }
+
+        [HttpPut]
+        [Route("{collectionId}")]
+        [Authorize]
+        public async Task<IActionResult> Update([FromRoute] int collectionId, [FromBody] UpdateCollectionDto collectionDto)
+        {
+            var username = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(username);
+
+            if(user == null)
+            {
+                return BadRequest("User is null");
+            }
+
+            var updatedCollection = await _collectionRepo.UpdateAsync(collectionId, collectionDto.ToCollectionFromUpdateDto());
+
+            if(updatedCollection == null)
+            {
+                return NotFound("Collection not found");
+            }
+
+            return Ok(updatedCollection.ToCollectionDto());
         }
 
         [HttpDelete]
