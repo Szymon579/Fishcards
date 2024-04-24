@@ -10,7 +10,7 @@ namespace api.Interfaces
     {
         Task<bool> CardExist(int id);
         Task<Card?> GetByIdAsync(int id);
-        Task<List<Card>>? GetByCollectionIdAsync(int collectionId);
+        Task<List<Card>?> GetByCollectionIdAsync(int collectionId);
         Task<Card> CreateAsync(Card card);
         Task<Card?> UpdateAsync(int id, Card card);
         Task<Card?> Delete(int id);

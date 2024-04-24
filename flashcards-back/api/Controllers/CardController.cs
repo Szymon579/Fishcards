@@ -58,7 +58,7 @@ namespace api.Controllers
 
             if(cards == null)
             {
-                return NotFound();
+                return NotFound("No cards found for this collection");
             }
             
             var cardsDto = cards.Select(c => c.ToCardDto());
@@ -68,7 +68,7 @@ namespace api.Controllers
 
         [HttpPost()]
         [Authorize]
-        public async Task<IActionResult> CreateByUser([FromBody] CreateCardDto cardDto)
+        public async Task<IActionResult> Create([FromBody] CreateCardDto cardDto)
         {
             var username = User.GetUsername();
             var user = await _userManager.FindByNameAsync(username);
@@ -78,12 +78,12 @@ namespace api.Controllers
                 return BadRequest("User is null");
             }
             
-            if(!await _collectionRepo.CollectionExist(cardDto.CollectionId))
+            var collection = await _collectionRepo.GetByIdAsync(cardDto.CollectionId);
+            
+            if(collection == null)
             {
                 return BadRequest("Collection does not exist");
-            }
-
-            var collection = await _collectionRepo.GetByIdAsync(cardDto.CollectionId);       
+            }     
             
             if(user.Id != collection.UserId)
             {
@@ -101,11 +101,34 @@ namespace api.Controllers
         [Authorize]
         public async Task<IActionResult> Update([FromRoute] int cardId, [FromBody] UpdateCardDto cardDto)
         {
-            var card = await _cardRepo.UpdateAsync(cardId, cardDto.ToCardFromUpdateDto());
+            var username = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(username);           
+            if(user == null)
+            {
+                return BadRequest("User is null");
+            }
 
+            var card = await _cardRepo.GetByIdAsync(cardId);        
             if(card == null)
             {
-                return NotFound("Card not found");
+                return BadRequest("Card does not exist");
+            }
+
+            var collection = await _collectionRepo.GetByIdAsync(card.CollectionId);   
+            if(collection == null)
+            {
+                return BadRequest("Collection does not exist");
+            }          
+            if(user.Id != collection.UserId)
+            {
+                return BadRequest("Not authorized for this collection");
+            }
+            
+            var updatedCard = await _cardRepo.UpdateAsync(cardId, cardDto.ToCardFromUpdateDto());
+
+            if(updatedCard == null)
+            {
+                return NotFound("Card update failed");
             }
 
             return Ok(card.ToCardDto());
@@ -124,18 +147,20 @@ namespace api.Controllers
                 return BadRequest("User is null");
             }
 
-            var card = await _cardRepo.GetByIdAsync(cardId);
-
+            var card = await _cardRepo.GetByIdAsync(cardId);        
             if(card == null)
             {
                 return BadRequest("Card does not exist");
             }
 
-            var collection = await _collectionRepo.GetByIdAsync(card.CollectionId);
-            
-            if(user.Id != collection.UserId) 
+            var collection = await _collectionRepo.GetByIdAsync(card.CollectionId);   
+            if(collection == null)
             {
-                return BadRequest("Not authorized for this card");
+                return BadRequest("Collection does not exist");
+            }          
+            if(user.Id != collection.UserId)
+            {
+                return BadRequest("Not authorized for this collection");
             }
 
             await _cardRepo.Delete(cardId);

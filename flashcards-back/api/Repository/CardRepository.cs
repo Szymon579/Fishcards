@@ -45,7 +45,7 @@ namespace api.Repository
             return cardModel;
         }
 
-        public async Task<List<Card>> GetByCollectionIdAsync(int collectionId)
+        public async Task<List<Card>?> GetByCollectionIdAsync(int collectionId)
         {
             return await _context.Cards.Where(c => c.CollectionId == collectionId).ToListAsync();
         }
