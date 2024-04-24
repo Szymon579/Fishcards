@@ -9,5 +9,6 @@ namespace api.Models
     public class User : IdentityUser
     {
         public List<Collection> Collections { get; set; } = new List<Collection>();
+        public List<SharedCollection> SharedCollections = new List<SharedCollection>();
     }
 }

@@ -8,6 +8,7 @@ using api.Data;
 using api.Dtos.Card;
 using api.Dtos.CardsCollection;
 using api.Dtos.Collection;
+using api.Dtos.ShareCollection;
 using api.Extensions;
 using api.Interfaces;
 using api.Mappers;
@@ -25,12 +26,85 @@ namespace api.Controllers
     public class CollectionController : ControllerBase
     {
         private readonly ICollectionRepository _collectionRepo;
+        private readonly ISharedCollectionRepository _sharedCollectionRepo;
         private readonly UserManager<User> _userManager;
         
-        public CollectionController(ICollectionRepository collectionRepo, UserManager<User> userManager) 
+        public CollectionController(ICollectionRepository collectionRepo, ISharedCollectionRepository sharedCollectionRepository, UserManager<User> userManager) 
         {
             _collectionRepo = collectionRepo;
+            _sharedCollectionRepo = sharedCollectionRepository;
             _userManager = userManager;
+        }
+
+        [HttpPost("share")]     
+        [Authorize]
+        public async Task<IActionResult> Share([FromBody] ShareCollecitonDto shareDto)
+        {
+            var username = User.GetUsername();
+            var owner = await _userManager.FindByNameAsync(username);
+
+            if(owner == null)
+            {
+                return BadRequest("User is null");
+            }
+
+            var collection = await _collectionRepo.GetByIdAsync(shareDto.CollectionId);
+            
+            if (collection == null)
+            {
+                return NotFound("Collection not found");
+            }
+
+            if(owner.Id != collection.UserId)
+            {
+                return BadRequest("Not autorized for this collection");
+            }
+
+            var shareToUser = await _userManager.FindByEmailAsync(shareDto.UserEmail);
+
+            if(shareToUser == null)
+            {
+                return BadRequest("Share to user not found");
+            }
+
+            var share = new SharedCollection
+            {
+                CollectionId = shareDto.CollectionId,
+                SharedWithUserId = shareToUser.Id,
+                CanEdit = false
+            };
+
+            var shareResult = await _sharedCollectionRepo.Share(share);
+
+            if(shareResult == null)
+            {
+                return NotFound("Share failed");
+            }
+
+            return Ok(shareResult);
+        }
+
+
+        [HttpGet("shared")]
+        [Authorize]
+        public async Task<IActionResult> GetSharedCollections()
+        {
+            var username = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(username);
+
+            if(user == null)
+            {
+                return BadRequest("User is null");
+            }
+
+            var shared = await _sharedCollectionRepo.GetShared(user);
+            
+            if(shared == null)
+            {
+                return NotFound("Shared collections not found");
+            }
+
+            return Ok(shared.Select(c => c.ToCollectionWithCardsDto()));
         }
 
         [HttpGet]
@@ -88,12 +162,6 @@ namespace api.Controllers
             {
                 return BadRequest("User is null");
             }
-
-            // var collection = new Collection
-            // {
-            //     UserId = user.Id,
-            //     Title = collectionDto.Title
-            // };
 
             var collection = collectionDto.ToCollectionFromCreateDto(user.Id);
 

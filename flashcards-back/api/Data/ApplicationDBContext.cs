@@ -19,7 +19,9 @@ namespace api.Data
         }
 
         public DbSet<Collection> Collections { get; set; }
+        public DbSet<SharedCollection> SharedCollections { get; set; }
         public DbSet<Card> Cards { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
