@@ -25,15 +25,7 @@ namespace api.Repository
             return await _context.Collections.AnyAsync(c => c.Id == id);
         }
 
-        public async Task<Collection> CreateAsync(Collection collectionModel)
-        {
-            await _context.Collections.AddAsync(collectionModel);
-            await _context.SaveChangesAsync();
-
-            return collectionModel;
-        }
-
-        public async Task<Collection> CreateByUser(Collection collection)
+        public async Task<Collection> CreateAsync(Collection collection)
         {
             await _context.Collections.AddAsync(collection);
             await _context.SaveChangesAsync();

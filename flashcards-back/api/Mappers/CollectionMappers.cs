@@ -29,10 +29,11 @@ namespace api.Mappers
             };
         }
     
-        public static Collection ToCollectionFromCreateDto(this CreateCollectionDto collectionDto) 
+        public static Collection ToCollectionFromCreateDto(this CreateCollectionDto collectionDto, string userId) 
         {
              return new Collection
              {
+                UserId = userId,
                 Title = collectionDto.Title
              };   
         }

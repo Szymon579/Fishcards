@@ -42,10 +42,11 @@ namespace api.Controllers
 
             if(user == null)
             {
-                return BadRequest("User not found");
+                return BadRequest("User is null");
             }
 
             var userCollections = await _collectionRepo.GetUserCollections(user);
+            
             return Ok(userCollections.Select(c => c.ToCollectionDto()));
         }
         
@@ -65,7 +66,7 @@ namespace api.Controllers
             
             if (collection == null)
             {
-                return NotFound();
+                return NotFound("Collection not found");
             }
 
             if(user.Id != collection.UserId)
@@ -78,28 +79,25 @@ namespace api.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateByUser([FromBody] CreateCollectionDto collectionDto) 
+        public async Task<IActionResult> Create([FromBody] CreateCollectionDto collectionDto) 
         {
             var username = User.GetUsername();
             var user = await _userManager.FindByNameAsync(username);
             
             if(user == null)
             {
-                return BadRequest("User not found");
+                return BadRequest("User is null");
             }
 
-            var collection = new Collection
-            {
-                UserId = user.Id,
-                Title = collectionDto.Title
-            };
+            // var collection = new Collection
+            // {
+            //     UserId = user.Id,
+            //     Title = collectionDto.Title
+            // };
 
-            await _collectionRepo.CreateByUser(collection);
+            var collection = collectionDto.ToCollectionFromCreateDto(user.Id);
 
-            if(collection == null)
-            {
-                return StatusCode(500, "Could not create collection");
-            }
+            await _collectionRepo.CreateAsync(collection);
 
             return Ok(collection.ToCollectionDto());
         }
@@ -117,11 +115,23 @@ namespace api.Controllers
                 return BadRequest("User is null");
             }
 
+            var existingCollection = await _collectionRepo.GetByIdAsync(collectionId);
+            
+            if(existingCollection == null)
+            {
+                return BadRequest("Collection does not exist");
+            }     
+            
+            if(user.Id != existingCollection.UserId)
+            {
+                return BadRequest("Not authorized for this collection");
+            }
+
             var updatedCollection = await _collectionRepo.UpdateAsync(collectionId, collectionDto.ToCollectionFromUpdateDto());
 
             if(updatedCollection == null)
             {
-                return NotFound("Collection not found");
+                return NotFound("Collection update failed");
             }
 
             return Ok(updatedCollection.ToCollectionDto());
