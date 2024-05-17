@@ -1,6 +1,4 @@
 
-
-
 <div class="flex-wrapper">
     <li *ngFor="let collection of collections">
       <div class="collection-wrapper">
@@ -13,7 +11,7 @@
           <button class="ctrl-btn">
               <img src="./assets/edit.png">
           </button>
-          <button class="ctrl-btn">
+          <button class="ctrl-btn" (click)="sharePopup(true)">
               <img src="./assets/share.png">
           </button>
           <button class="ctrl-btn" (click)="deleteCollection(collection.id)">
@@ -33,6 +31,7 @@
           </button>
         </div>
         
-
   </div>
+
+  <app-collection-share *ngIf="isPopupVisible" (cancelEvent)="sharePopup(false)"></app-collection-share>
   

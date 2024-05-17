@@ -131,6 +131,7 @@ namespace api.Controllers
             var username = User.GetUsername();
             var user = await _userManager.FindByNameAsync(username);
             
+            
             if(user == null)
             {
                 return BadRequest("User not found");

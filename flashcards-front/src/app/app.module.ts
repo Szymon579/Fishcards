@@ -11,6 +11,7 @@ import { NgFor } from '@angular/common';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { LoginComponent } from './login/login.component';
 import { AuthInterceptor } from './auth.interceptor';
+import { CollectionShareComponent } from './collection-share/collection-share.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { AuthInterceptor } from './auth.interceptor';
     CollectionsComponent,
     TopBarComponent,
     LoginComponent,
+    CollectionShareComponent,
     
   ],
   imports: [

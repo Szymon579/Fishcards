@@ -9,6 +9,7 @@ import { CollectionService } from '../collection.service';
 })
 export class CollectionsComponent implements OnInit {
   collections: Collection[] = [];
+  isPopupVisible: boolean = false;
 
   constructor(private collectionService: CollectionService) {}
 
@@ -38,5 +39,9 @@ export class CollectionsComponent implements OnInit {
     this.collectionService.deleteCollection(id)
       .subscribe();
     
+  }
+
+  sharePopup(display: boolean): void {
+    this.isPopupVisible = display;
   }
 }
