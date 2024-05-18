@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Collection } from './collection';
+import { Collection, ShareCollection } from './collection';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -29,6 +29,15 @@ export class CollectionService {
 
   deleteCollection(id: number): Observable<Collection> {
     return this.http.delete<Collection>(this.collectionsUrl + `/${id}`);
+  }
+
+  shareCollection(share: ShareCollection): Observable<Collection> {
+    console.log(share);
+    return this.http.post<Collection>(this.collectionsUrl + `/share`, share, this.httpOptions);
+  }
+
+  getSharedCollections(): Observable<Collection[]> {
+    return this.http.get<Collection[]>(this.collectionsUrl + `/shared`);
   }
 
 }

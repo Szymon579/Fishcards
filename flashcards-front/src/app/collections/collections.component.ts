@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Collection } from '../collection';
+import { Collection, ShareCollection } from '../collection';
 import { CollectionService } from '../collection.service';
 
 @Component({
@@ -10,16 +10,25 @@ import { CollectionService } from '../collection.service';
 export class CollectionsComponent implements OnInit {
   collections: Collection[] = [];
   isPopupVisible: boolean = false;
+  collectionId: number = 0;
 
   constructor(private collectionService: CollectionService) {}
 
   ngOnInit(): void {
     this.getCollections();
+    this.getSharedCollections();
   }
 
   getCollections(): void {
     this.collectionService.getCollections()
-      .subscribe(collections => {this.collections = collections;  console.log(collections)});
+      .subscribe(collections => {this.collections = collections;  console.log(collections);
+      });
+  }
+
+  getSharedCollections(): void {
+    this.collectionService.getSharedCollections()
+      .subscribe(shared => {this.collections = this.collections.concat(shared); console.log(shared);
+      });
   }
 
   addCollection(name: string): void {
@@ -41,7 +50,21 @@ export class CollectionsComponent implements OnInit {
     
   }
 
-  sharePopup(display: boolean): void {
-    this.isPopupVisible = display;
+  displayPopup(collectionId: number): void {
+    this.isPopupVisible = true;
+    this.collectionId = collectionId;
+  }
+
+  closePopup(): void {
+    this.isPopupVisible = false;
+  }
+
+  shareCollection(collectionId: number, email: string) : void {
+    const newShare: ShareCollection = {
+      id: collectionId,
+      email: email
+    }
+
+    this.collectionService.shareCollection(newShare).subscribe(() => this.isPopupVisible = false);
   }
 }

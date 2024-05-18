@@ -5,3 +5,8 @@ export interface Collection {
     title: string;
     cards: Card[];
 }
+
+export interface ShareCollection {
+    id: number;
+    email: string;
+}

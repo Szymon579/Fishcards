@@ -1,13 +1,7 @@
 <div class="overlay">
   <div class="popup">
-      <input
-        type="email"
-        #email
-        name="email"
-        required
-        placeholder="Enter user email"
-      />
-      <button (click)="onSubmit()">Share</button>
+      <input #email placeholder="Enter user email"/>
+      <button (click)="onSubmit(email.value)">Share</button>
       <button (click)="onCancel()">Cancel</button>
   </div>
 </div>

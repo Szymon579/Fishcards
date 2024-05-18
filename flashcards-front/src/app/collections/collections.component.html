@@ -11,7 +11,7 @@
           <button class="ctrl-btn">
               <img src="./assets/edit.png">
           </button>
-          <button class="ctrl-btn" (click)="sharePopup(true)">
+          <button class="ctrl-btn" (click)="displayPopup(collection.id)">
               <img src="./assets/share.png">
           </button>
           <button class="ctrl-btn" (click)="deleteCollection(collection.id)">
@@ -33,5 +33,5 @@
         
   </div>
 
-  <app-collection-share *ngIf="isPopupVisible" (cancelEvent)="sharePopup(false)"></app-collection-share>
+  <app-collection-share *ngIf="isPopupVisible" (submitEvent)="shareCollection(this.collectionId, $event)" (cancelEvent)="closePopup()"></app-collection-share>
   

@@ -52,7 +52,7 @@ namespace api.Controllers
             
             if (collection == null)
             {
-                return NotFound("Collection not found");
+                return NotFound("Collection not found!");
             }
 
             if(owner.Id != collection.UserId)

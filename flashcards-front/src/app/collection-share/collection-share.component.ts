@@ -9,12 +9,12 @@ import { EventEmitter } from '@angular/core';
 
 export class CollectionShareComponent {
   @Output() cancelEvent = new EventEmitter();
-  email: string = '';
+  @Output() submitEvent = new EventEmitter<string>();
 
-  onSubmit(): void {
-    if(this.email) {
-      console.log('Email: ', this.email);
-    }
+  onSubmit(email: string): void {
+    console.log("submited");
+      
+    this.submitEvent.emit(email);
   }
 
   onCancel(): void {
