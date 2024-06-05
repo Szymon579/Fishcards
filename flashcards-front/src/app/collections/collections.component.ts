@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Collection, ShareCollection } from '../collection';
+import { Collection, ShareCollection, RenameCollection } from '../collection';
 import { CollectionService } from '../collection.service';
 
 @Component({
@@ -8,8 +8,10 @@ import { CollectionService } from '../collection.service';
   styleUrl: './collections.component.css'
 })
 export class CollectionsComponent implements OnInit {
+  
   collections: Collection[] = [];
-  isPopupVisible: boolean = false;
+  renamePopup: boolean = false;
+  sharePopup: boolean = false;
   collectionId: number = 0;
 
   constructor(private collectionService: CollectionService) {}
@@ -50,13 +52,21 @@ export class CollectionsComponent implements OnInit {
     
   }
 
-  displayPopup(collectionId: number): void {
-    this.isPopupVisible = true;
-    this.collectionId = collectionId;
-  }
-
-  closePopup(): void {
-    this.isPopupVisible = false;
+  renameCollection(collectionId: number, newTitle: string): void {
+    const updatedCollection: RenameCollection = {
+      id: collectionId,
+      title: newTitle
+    }
+    
+    this.collectionService.renameCollection(updatedCollection)
+      .subscribe(() => {
+                        this.renamePopup = false; 
+                        const coll = this.collections.find(c => c.id == collectionId);
+                        if(coll)
+                          coll.title = newTitle
+                        else
+                          console.log("Rename error");  
+                        });
   }
 
   shareCollection(collectionId: number, email: string) : void {
@@ -64,7 +74,22 @@ export class CollectionsComponent implements OnInit {
       id: collectionId,
       email: email
     }
+    this.collectionService.shareCollection(newShare)
+      .subscribe(() => this.sharePopup = false );
+  }
 
-    this.collectionService.shareCollection(newShare).subscribe(() => this.isPopupVisible = false);
+  displaySharePopup(id: number): void {
+    this.sharePopup = true;
+    this.collectionId = id;
+  }
+
+  displayRenamePopup(collectionId: number): void {
+    this.renamePopup = true;
+    this.collectionId = collectionId;
+  }
+
+  closePopup(): void {
+    this.renamePopup = false;
+    this.sharePopup = false;
   }
 }

@@ -10,3 +10,8 @@ export interface ShareCollection {
     id: number;
     email: string;
 }
+
+export interface RenameCollection {
+    id: number;
+    title: string;
+}

@@ -7,6 +7,7 @@ namespace api.Dtos.Collection
 {
     public class UpdateCollectionDto
     {
+        public int Id {get; set; }  
         public string Title {get; set; } = string.Empty; 
     }
 }

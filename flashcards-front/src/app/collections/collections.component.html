@@ -5,13 +5,13 @@
         <div class="title-wrapper" routerLink="/collections/{{collection.id}}">
           <div class="title-div">
             {{collection.title}}
-          </div>
+          </div>     
         </div>
         <div class="controls-div"> 
-          <button class="ctrl-btn">
+          <button class="ctrl-btn" (click)="displayRenamePopup(collection.id)">
               <img src="./assets/edit.png">
           </button>
-          <button class="ctrl-btn" (click)="displayPopup(collection.id)">
+          <button class="ctrl-btn" (click)="displaySharePopup(collection.id)">
               <img src="./assets/share.png">
           </button>
           <button class="ctrl-btn" (click)="deleteCollection(collection.id)">
@@ -33,5 +33,5 @@
         
   </div>
 
-  <app-collection-share *ngIf="isPopupVisible" (submitEvent)="shareCollection(this.collectionId, $event)" (cancelEvent)="closePopup()"></app-collection-share>
-  
+  <app-collection-share *ngIf="sharePopup" (submitEvent)="shareCollection(this.collectionId, $event)" (cancelEvent)="closePopup()"></app-collection-share>
+  <app-collection-rename *ngIf="renamePopup" (submitEvent)="renameCollection(this.collectionId, $event)" (cancelEvent)="closePopup()"></app-collection-rename>

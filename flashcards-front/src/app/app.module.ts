@@ -12,6 +12,7 @@ import { TopBarComponent } from './top-bar/top-bar.component';
 import { LoginComponent } from './login/login.component';
 import { AuthInterceptor } from './auth.interceptor';
 import { CollectionShareComponent } from './collection-share/collection-share.component';
+import { CollectionRenameComponent } from './collection-rename/collection-rename.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { CollectionShareComponent } from './collection-share/collection-share.co
     TopBarComponent,
     LoginComponent,
     CollectionShareComponent,
+    CollectionRenameComponent,
     
   ],
   imports: [

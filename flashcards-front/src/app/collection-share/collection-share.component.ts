@@ -12,8 +12,7 @@ export class CollectionShareComponent {
   @Output() submitEvent = new EventEmitter<string>();
 
   onSubmit(email: string): void {
-    console.log("submited");
-      
+    console.log("submited");     
     this.submitEvent.emit(email);
   }
 

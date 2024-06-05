@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Collection, ShareCollection } from './collection';
+import { Collection, RenameCollection, ShareCollection } from './collection';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -38,6 +38,10 @@ export class CollectionService {
 
   getSharedCollections(): Observable<Collection[]> {
     return this.http.get<Collection[]>(this.collectionsUrl + `/shared`);
+  }
+
+  renameCollection(updatedCollection: RenameCollection): Observable<RenameCollection> {
+    return this.http.put<RenameCollection>(this.collectionsUrl + `/${updatedCollection.id}`, updatedCollection, this.httpOptions);
   }
 
 }

@@ -42,6 +42,7 @@ namespace api.Mappers
         {
              return new Collection
              {
+                Id = collectionDto.Id,
                 Title = collectionDto.Title
              };   
         }
