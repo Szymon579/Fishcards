@@ -47,8 +47,7 @@ export class CollectionsComponent implements OnInit {
 
   deleteCollection(id: number): void {
     this.collections = this.collections.filter(deletedColl => deletedColl.id !== id);
-    this.collectionService.deleteCollection(id)
-      .subscribe();
+    this.collectionService.deleteCollection(id).subscribe();
     
   }
 

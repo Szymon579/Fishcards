@@ -233,7 +233,7 @@ namespace api.Controllers
 
             await _collectionRepo.DeleteAsync(collectionId);
 
-            return Ok(collection.ToCollectionDto());
+            return Ok("Collection deleted");
         }
 
     }

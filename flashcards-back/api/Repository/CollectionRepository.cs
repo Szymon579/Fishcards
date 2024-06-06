@@ -42,7 +42,12 @@ namespace api.Repository
                 return null;
             }
 
+            // remove shares of this collection
+            var shared = await _context.SharedCollections.Where(sc => sc.CollectionId == id).ToListAsync();
+            _context.SharedCollections.RemoveRange(shared);
+
             _context.Collections.Remove(collectionModel);
+                    
             await _context.SaveChangesAsync();
 
             return collectionModel;
