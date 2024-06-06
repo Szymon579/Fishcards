@@ -74,15 +74,15 @@ export class CardsComponent implements OnInit {
           backText: this.backText!
         };
 
+        this.cards[this.index]= newCard;                    
         this.cardService.editCard(this.cards.at(this.index)!.id, newCard)
-          .subscribe(() => console.log("card edited"));
-        
+          .subscribe(() => {console.log("card edited");         
+          });      
       }
     
     this.editingCard = !this.editingCard
     console.log("editing"); 
   }
-
 
   deleteCard(): void {
     const cardId = Number(this.cards[this.index].id);
