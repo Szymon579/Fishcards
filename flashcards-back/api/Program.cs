@@ -85,7 +85,6 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<ICollectionRepository, CollectionRepository>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
-builder.Services.AddScoped<ISharedCollectionRepository, SharedCollectionRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>

@@ -20,7 +20,6 @@ namespace api.Data
         }
 
         public DbSet<Collection> Collections { get; set; }
-        public DbSet<SharedCollection> SharedCollections { get; set; }
         public DbSet<Card> Cards { get; set; }
         
         protected override void OnModelCreating(ModelBuilder builder)
@@ -41,6 +40,18 @@ namespace api.Data
                 }
             };
             builder.Entity<IdentityRole>().HasData(roles);
+
+            builder.Entity<User>()
+                .HasMany(c => c.Collections)
+                .WithOne(u => u.User)
+                .HasForeignKey(u => u.UserId)
+                .IsRequired();
+
+            builder.Entity<Collection>()
+                .HasMany(c => c.Cards)
+                .WithOne(c => c.Collection)
+                .HasForeignKey(c => c.CollectionId)
+                .IsRequired();
 
         }
         

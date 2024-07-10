@@ -42,10 +42,6 @@ namespace api.Repository
                 return null;
             }
 
-            // remove shares of this collection
-            var shared = await _context.SharedCollections.Where(sc => sc.CollectionId == id).ToListAsync();
-            _context.SharedCollections.RemoveRange(shared);
-
             _context.Collections.Remove(collectionModel);
                     
             await _context.SaveChangesAsync();
@@ -73,6 +69,31 @@ namespace api.Repository
                     Title = collection.Title,
                     Cards = collection.Cards
                 }).ToListAsync();
+        }
+
+        public async Task<bool> ShareCollection(int id, User user)
+        {
+            var collectionToShare = await _context.Collections.Include(c => c.Cards).FirstOrDefaultAsync(c => c.Id == id);
+
+            if (collectionToShare == null)
+                return false;
+
+            var newCollection = new Collection
+            {
+                UserId = user.Id,
+                User = user,
+                Title = collectionToShare.Title,
+                Cards = collectionToShare.Cards.Select(card => new Card
+                {
+                    FrontText = card.FrontText,
+                    BackText = card.BackText
+                }).ToList()
+            };
+
+            await _context.Collections.AddAsync(newCollection);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<Collection?> UpdateAsync(int id, Collection collection)

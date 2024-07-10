@@ -8,7 +8,6 @@ using api.Data;
 using api.Dtos.Card;
 using api.Dtos.CardsCollection;
 using api.Dtos.Collection;
-using api.Dtos.ShareCollection;
 using api.Extensions;
 using api.Interfaces;
 using api.Mappers;
@@ -26,68 +25,17 @@ namespace api.Controllers
     public class CollectionController : ControllerBase
     {
         private readonly ICollectionRepository _collectionRepo;
-        private readonly ISharedCollectionRepository _sharedCollectionRepo;
         private readonly UserManager<User> _userManager;
         
-        public CollectionController(ICollectionRepository collectionRepo, ISharedCollectionRepository sharedCollectionRepository, UserManager<User> userManager) 
+        public CollectionController(ICollectionRepository collectionRepo, UserManager<User> userManager) 
         {
             _collectionRepo = collectionRepo;
-            _sharedCollectionRepo = sharedCollectionRepository;
             _userManager = userManager;
         }
 
         [HttpPost("share")]     
         [Authorize]
-        public async Task<IActionResult> Share([FromBody] ShareCollecitonDto shareDto)
-        {
-            var username = User.GetUsername();
-            var owner = await _userManager.FindByNameAsync(username);
-
-            if(owner == null)
-            {
-                return BadRequest("User is null");
-            }
-
-            var collection = await _collectionRepo.GetByIdAsync(shareDto.CollectionId);
-            
-            if (collection == null)
-            {
-                return NotFound("Collection not found!");
-            }
-
-            if(owner.Id != collection.UserId)
-            {
-                return BadRequest("Not autorized for this collection");
-            }
-
-            var shareToUser = await _userManager.FindByEmailAsync(shareDto.UserEmail);
-
-            if(shareToUser == null)
-            {
-                return BadRequest("Share to user not found");
-            }
-
-            var share = new SharedCollection
-            {
-                CollectionId = shareDto.CollectionId,
-                SharedWithUserId = shareToUser.Id,
-                CanEdit = false
-            };
-
-            var shareResult = await _sharedCollectionRepo.Share(share);
-
-            if(shareResult == null)
-            {
-                return NotFound("Share failed");
-            }
-
-            return Ok(shareResult);
-        }
-
-
-        [HttpGet("shared")]
-        [Authorize]
-        public async Task<IActionResult> GetSharedCollections()
+        public async Task<IActionResult> ShareCollection([FromBody] CollectionShareDto shareDto)
         {
             var username = User.GetUsername();
             var user = await _userManager.FindByNameAsync(username);
@@ -97,19 +45,21 @@ namespace api.Controllers
                 return BadRequest("User is null");
             }
 
-            var shared = await _sharedCollectionRepo.GetShared(user);
-            
-            if(shared == null)
+            var userToShare = await _userManager.FindByEmailAsync(shareDto.Email);
+
+            if(userToShare == null)
             {
-                return NotFound("Shared collections not found");
+                return BadRequest("User to share is null");
             }
 
-            return Ok(shared.Select(c => c.ToCollectionWithCardsDto()));
+            await _collectionRepo.ShareCollection(shareDto.Id, userToShare);
+
+            return Ok();
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetUserCollections()
+        public async Task<IActionResult> GetCollections()
         {
             var username = User.GetUsername();
             var user = await _userManager.FindByNameAsync(username);
@@ -126,11 +76,10 @@ namespace api.Controllers
         
         [HttpGet("{collectionId}")]
         [Authorize]
-        public async Task<IActionResult> GetById([FromRoute] int collectionId)
+        public async Task<IActionResult> GetCollectionById([FromRoute] int collectionId)
         {
             var username = User.GetUsername();
             var user = await _userManager.FindByNameAsync(username);
-            
             
             if(user == null)
             {
@@ -154,7 +103,7 @@ namespace api.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Create([FromBody] CreateCollectionDto collectionDto) 
+        public async Task<IActionResult> CreateCollection([FromBody] CreateCollectionDto collectionDto) 
         {
             var username = User.GetUsername();
             var user = await _userManager.FindByNameAsync(username);
@@ -174,7 +123,7 @@ namespace api.Controllers
         [HttpPut]
         [Route("{collectionId}")]
         [Authorize]
-        public async Task<IActionResult> Update([FromRoute] int collectionId, [FromBody] UpdateCollectionDto collectionDto)
+        public async Task<IActionResult> UpdateCollection([FromRoute] int collectionId, [FromBody] UpdateCollectionDto collectionDto)
         {
             var username = User.GetUsername();
             var user = await _userManager.FindByNameAsync(username);
@@ -209,7 +158,7 @@ namespace api.Controllers
         [HttpDelete]
         [Route("{collectionId}")]
         [Authorize]
-        public async Task<IActionResult> Delete([FromRoute] int collectionId)
+        public async Task<IActionResult> DeleteCollection([FromRoute] int collectionId)
         {
             var username = User.GetUsername();
             var user = await _userManager.FindByNameAsync(username);
@@ -226,7 +175,7 @@ namespace api.Controllers
                 return BadRequest("Collection does not exist");
             }
             
-            if(user.Id != collection.UserId)
+            if(user.Id == collection.UserId)
             {
                 return BadRequest("User not authorized for this collection");
             }

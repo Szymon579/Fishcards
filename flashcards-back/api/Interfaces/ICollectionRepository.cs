@@ -11,6 +11,7 @@ namespace api.Interfaces
         Task<List<Collection>> GetAllAsync();
         Task<Collection?> GetByIdAsync(int id);
         Task<List<Collection>> GetUserCollections(User user);
+        Task<bool> ShareCollection(int id, User user);
         Task<Collection> CreateAsync(Collection collection);
         Task<Collection?> UpdateAsync(int id, Collection collection);
         Task<Collection?> DeleteAsync(int id);
