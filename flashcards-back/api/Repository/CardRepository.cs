@@ -17,59 +17,57 @@ namespace api.Repository
         {
             _context = context;
         }
+
         public async Task<bool> CardExist(int id)
         {
             return await _context.Cards.AnyAsync(c => c.Id == id);
         }
 
-        public async Task<Card> CreateAsync(Card cardModel)
+        public async Task<bool> CreateCard(Card cardModel)
         {
             await _context.Cards.AddAsync(cardModel);
-            await _context.SaveChangesAsync();
 
-            return cardModel;
+            return await SaveChanges();
         }
 
-        public async Task<Card?> Delete(int id)
+        public async Task<bool> DeleteCard(int id)
         {
             var cardModel = _context.Cards.FirstOrDefault(c => c.Id == id);
             
             if(cardModel == null)
-            {
-                return null;
-            }
+                return false;
 
             _context.Cards.Remove(cardModel);
-            await _context.SaveChangesAsync();
 
-            return cardModel;
+            return await SaveChanges();
         }
 
-        public async Task<List<Card>?> GetByCollectionIdAsync(int collectionId)
+        public async Task<List<Card>?> GetCardsByCollectionId(int collectionId)
         {
             return await _context.Cards.Where(c => c.CollectionId == collectionId).ToListAsync();
         }
 
-        public async Task<Card?> GetByIdAsync(int id)
+        public async Task<Card?> GetCardById(int id)
         {
             return await _context.Cards.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<Card?> UpdateAsync(int id, Card card)
+        public async Task<bool> UpdateCard(int id, Card card)
         {
             var existingCard = await _context.Cards.FindAsync(id);
 
             if(existingCard == null)
-            {
-                return null;
-            }
+                return false;
                 
             existingCard.FrontText = card.FrontText;
             existingCard.BackText = card.BackText;
 
-            await _context.SaveChangesAsync();
+            return await SaveChanges();
+        }
 
-            return existingCard;
+        public async Task<bool> SaveChanges()
+        {
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

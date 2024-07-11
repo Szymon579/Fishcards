@@ -9,10 +9,11 @@ namespace api.Interfaces
     public interface ICardRepository
     {
         Task<bool> CardExist(int id);
-        Task<Card?> GetByIdAsync(int id);
-        Task<List<Card>?> GetByCollectionIdAsync(int collectionId);
-        Task<Card> CreateAsync(Card card);
-        Task<Card?> UpdateAsync(int id, Card card);
-        Task<Card?> Delete(int id);
+        Task<Card?> GetCardById(int id);
+        Task<List<Card>?> GetCardsByCollectionId(int collectionId);
+        Task<bool> CreateCard(Card card);
+        Task<bool> UpdateCard(int id, Card card);
+        Task<bool> DeleteCard(int id);
+        Task<bool> SaveChanges();
     }
 }

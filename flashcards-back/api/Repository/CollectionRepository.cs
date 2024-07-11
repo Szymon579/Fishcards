@@ -25,36 +25,31 @@ namespace api.Repository
             return await _context.Collections.AnyAsync(c => c.Id == id);
         }
 
-        public async Task<Collection> CreateAsync(Collection collection)
+        public async Task<bool> CreateCollection(Collection collection)
         {
             await _context.Collections.AddAsync(collection);
-            await _context.SaveChangesAsync();
 
-            return collection;
+            return await SaveChanges();
         }
 
-        public async Task<Collection?> DeleteAsync(int id)
+        public async Task<bool> DeleteCollection(int id)
         {
             var collectionModel = await _context.Collections.FirstOrDefaultAsync(x => x.Id == id);
 
             if(collectionModel == null)
-            {
-                return null;
-            }
+                return false;
 
             _context.Collections.Remove(collectionModel);
                     
-            await _context.SaveChangesAsync();
-
-            return collectionModel;
+            return await SaveChanges();
         }
 
-        public async Task<List<Collection>> GetAllAsync()
+        public async Task<List<Collection>> GetAllCollections()
         {
             return await _context.Collections.ToListAsync();
         }
 
-        public async Task<Collection?> GetByIdAsync(int id)
+        public async Task<Collection?> GetCollectionById(int id)
         {
             return await _context.Collections.Include(x => x.Cards).FirstOrDefaultAsync(x => x.Id == id);
         }
@@ -91,25 +86,25 @@ namespace api.Repository
             };
 
             await _context.Collections.AddAsync(newCollection);
-            await _context.SaveChangesAsync();
 
-            return true;
+            return await SaveChanges();
         }
 
-        public async Task<Collection?> UpdateAsync(int id, Collection collection)
+        public async Task<bool> UpdateCollection(int id, Collection collection)
         {
             var existingCollection = await _context.Collections.FindAsync(id);
 
             if(existingCollection == null)
-            {
-                return null;
-            }
+                return false;
 
             existingCollection.Title = collection.Title;
 
-            await _context.SaveChangesAsync();
+            return await SaveChanges();
+        }
 
-            return existingCollection;
+        public async Task<bool> SaveChanges()
+        {
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

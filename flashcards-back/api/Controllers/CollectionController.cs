@@ -39,20 +39,17 @@ namespace api.Controllers
         {
             var username = User.GetUsername();
             var user = await _userManager.FindByNameAsync(username);
-
+            
             if(user == null)
-            {
                 return BadRequest("User is null");
-            }
 
             var userToShare = await _userManager.FindByEmailAsync(shareDto.Email);
-
+            
             if(userToShare == null)
-            {
                 return BadRequest("User to share is null");
-            }
 
-            await _collectionRepo.ShareCollection(shareDto.Id, userToShare);
+            if(!await _collectionRepo.ShareCollection(shareDto.Id, userToShare))
+                return StatusCode(500, "Collection share failded");
 
             return Ok();
         }
@@ -63,12 +60,10 @@ namespace api.Controllers
         {
             var username = User.GetUsername();
             var user = await _userManager.FindByNameAsync(username);
-
+            
             if(user == null)
-            {
                 return BadRequest("User is null");
-            }
-
+            
             var userCollections = await _collectionRepo.GetUserCollections(user);
             
             return Ok(userCollections.Select(c => c.ToCollectionDto()));
@@ -82,22 +77,17 @@ namespace api.Controllers
             var user = await _userManager.FindByNameAsync(username);
             
             if(user == null)
-            {
                 return BadRequest("User not found");
-            }
-
-            var collection = await _collectionRepo.GetByIdAsync(collectionId);
+            
+            var collection = await _collectionRepo.GetCollectionById(collectionId);
             
             if (collection == null)
-            {
                 return NotFound("Collection not found");
-            }
+            
 
             if(user.Id != collection.UserId)
-            {
                 return BadRequest("User not authorized for this collection");
-            }
-
+            
             return Ok(collection.ToCollectionWithCardsDto());
         }
 
@@ -109,13 +99,12 @@ namespace api.Controllers
             var user = await _userManager.FindByNameAsync(username);
             
             if(user == null)
-            {
                 return BadRequest("User is null");
-            }
 
             var collection = collectionDto.ToCollectionFromCreateDto(user.Id);
 
-            await _collectionRepo.CreateAsync(collection);
+            if(!await _collectionRepo.CreateCollection(collection))
+                return StatusCode(500, "Collection create failed");
 
             return Ok(collection.ToCollectionDto());
         }
@@ -129,30 +118,20 @@ namespace api.Controllers
             var user = await _userManager.FindByNameAsync(username);
 
             if(user == null)
-            {
                 return BadRequest("User is null");
-            }
 
-            var existingCollection = await _collectionRepo.GetByIdAsync(collectionId);
+            var existingCollection = await _collectionRepo.GetCollectionById(collectionId);
             
             if(existingCollection == null)
-            {
-                return BadRequest("Collection does not exist");
-            }     
+                return BadRequest("Collection does not exist"); 
             
             if(user.Id != existingCollection.UserId)
-            {
                 return BadRequest("Not authorized for this collection");
-            }
 
-            var updatedCollection = await _collectionRepo.UpdateAsync(collectionId, collectionDto.ToCollectionFromUpdateDto());
+            if(!await _collectionRepo.UpdateCollection(collectionId, collectionDto.ToCollectionFromUpdateDto()))
+                return StatusCode(500, "Collection update failed");
 
-            if(updatedCollection == null)
-            {
-                return NotFound("Collection update failed");
-            }
-
-            return Ok(updatedCollection.ToCollectionDto());
+            return Ok("Collection updated");
         }
 
         [HttpDelete]
@@ -164,23 +143,18 @@ namespace api.Controllers
             var user = await _userManager.FindByNameAsync(username);
             
             if(user == null)
-            {
                 return BadRequest("User not found");
-            }
             
-            var collection = await _collectionRepo.GetByIdAsync(collectionId);
+            var collection = await _collectionRepo.GetCollectionById(collectionId);
 
             if (collection == null)
-            {
                 return BadRequest("Collection does not exist");
-            }
             
-            if(user.Id == collection.UserId)
-            {
+            if(user.Id != collection.UserId)
                 return BadRequest("User not authorized for this collection");
-            }
 
-            await _collectionRepo.DeleteAsync(collectionId);
+            if(!await _collectionRepo.DeleteCollection(collectionId))
+                return StatusCode(500, "Collection delete failed");
 
             return Ok("Collection deleted");
         }

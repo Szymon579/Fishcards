@@ -29,7 +29,6 @@ namespace api.Controllers
             _userManager = userManager;
         }
 
-
         [HttpGet("{collectionId}")]
         [Authorize]
         public async Task<IActionResult> GetByUserCollectionId([FromRoute] int collectionId)
@@ -38,33 +37,25 @@ namespace api.Controllers
             var user = await _userManager.FindByNameAsync(username);
             
             if(user == null)
-            {
                 return BadRequest("User is null");
-            }
 
-            var collection = await _collectionRepo.GetByIdAsync(collectionId);
+            var collection = await _collectionRepo.GetCollectionById(collectionId);
             
             if(collection == null)
-            {
                 return BadRequest("Collection does not exist");
-            }
             
             if(user.Id != collection.UserId)
-            {
                 return BadRequest("Not authorized for this collection");
-            }
             
-            var cards = await _cardRepo.GetByCollectionIdAsync(collectionId);
+            var cards = await _cardRepo.GetCardsByCollectionId(collectionId);
 
             if(cards == null)
-            {
                 return NotFound("No cards found for this collection");
-            }
             
             var cardsDto = cards.Select(c => c.ToCardDto());
+            
             return Ok(cardsDto);
         }
-        
 
         [HttpPost()]
         [Authorize]
@@ -74,26 +65,22 @@ namespace api.Controllers
             var user = await _userManager.FindByNameAsync(username);
 
             if(user == null)
-            {
                 return BadRequest("User is null");
-            }
             
-            var collection = await _collectionRepo.GetByIdAsync(cardDto.CollectionId);
+            var collection = await _collectionRepo.GetCollectionById(cardDto.CollectionId);
             
             if(collection == null)
-            {
-                return BadRequest("Collection does not exist");
-            }     
+                return BadRequest("Collection does not exist");     
             
             if(user.Id != collection.UserId)
-            {
                 return BadRequest("Not authorized for this collection");
-            }
 
             var cardModel = cardDto.ToCardFromCreateDto();
-            await _cardRepo.CreateAsync(cardModel);
+            
+            if(!await _cardRepo.CreateCard(cardModel))
+                return StatusCode(500, "Card create failded");
 
-            return Ok(cardModel.ToCardDto());
+            return Ok();
         }
 
         [HttpPut]
@@ -103,35 +90,26 @@ namespace api.Controllers
         {
             var username = User.GetUsername();
             var user = await _userManager.FindByNameAsync(username);           
-            if(user == null)
-            {
-                return BadRequest("User is null");
-            }
-
-            var card = await _cardRepo.GetByIdAsync(cardId);        
-            if(card == null)
-            {
-                return BadRequest("Card does not exist");
-            }
-
-            var collection = await _collectionRepo.GetByIdAsync(card.CollectionId);   
-            if(collection == null)
-            {
-                return BadRequest("Collection does not exist");
-            }          
-            if(user.Id != collection.UserId)
-            {
-                return BadRequest("Not authorized for this collection");
-            }
             
-            var updatedCard = await _cardRepo.UpdateAsync(cardId, cardDto.ToCardFromUpdateDto());
+            if(user == null)
+                return BadRequest("User is null");
 
-            if(updatedCard == null)
-            {
-                return NotFound("Card update failed");
-            }
+            var card = await _cardRepo.GetCardById(cardId);        
+            if(card == null)
+                return BadRequest("Card does not exist");
 
-            return Ok(card.ToCardDto());
+            var collection = await _collectionRepo.GetCollectionById(card.CollectionId);   
+            
+            if(collection == null)
+                return BadRequest("Collection does not exist");
+
+            if(user.Id != collection.UserId)
+                return BadRequest("Not authorized for this collection");
+            
+            if(!await _cardRepo.UpdateCard(cardId, cardDto.ToCardFromUpdateDto()))
+                return StatusCode(500, "Card update failed");
+
+            return Ok();
         }
 
         [HttpDelete]
@@ -143,29 +121,25 @@ namespace api.Controllers
             var user = await _userManager.FindByNameAsync(username);
 
             if(user == null)
-            {
                 return BadRequest("User is null");
-            }
 
-            var card = await _cardRepo.GetByIdAsync(cardId);        
+            var card = await _cardRepo.GetCardById(cardId);        
+
             if(card == null)
-            {
                 return BadRequest("Card does not exist");
-            }
 
-            var collection = await _collectionRepo.GetByIdAsync(card.CollectionId);   
+            var collection = await _collectionRepo.GetCollectionById(card.CollectionId);   
+
             if(collection == null)
-            {
                 return BadRequest("Collection does not exist");
-            }          
+
             if(user.Id != collection.UserId)
-            {
                 return BadRequest("Not authorized for this collection");
-            }
 
-            await _cardRepo.Delete(cardId);
+            if(!await _cardRepo.DeleteCard(cardId))
+                return StatusCode(500, "Card delete failed");
 
-            return Ok(card.ToCardDto());
+            return Ok();
         }
     }
 }

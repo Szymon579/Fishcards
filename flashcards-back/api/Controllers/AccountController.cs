@@ -19,6 +19,7 @@ namespace api.Controllers
         private readonly UserManager<User> _userManager;
         private readonly ITokenService _tokenService;
         private readonly SignInManager<User> _signInManager;
+
         public AccountController(UserManager<User> userManager, ITokenService tokenService, SignInManager<User> signInManager)
         {
             _userManager = userManager;
@@ -50,7 +51,6 @@ namespace api.Controllers
                 });
             
         }
-
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
@@ -96,7 +96,6 @@ namespace api.Controllers
                 return StatusCode(500, ex);
             }
         }
-
 
         [HttpGet("authorized")]
         [Authorize]
