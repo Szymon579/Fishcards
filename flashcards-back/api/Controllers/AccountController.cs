@@ -97,23 +97,5 @@ namespace api.Controllers
             }
         }
 
-        [HttpGet("authorized")]
-        [Authorize]
-        public async Task<IActionResult> GetForAuthorized()
-        {
-            return Ok(new LoginDto{
-                Password = "password123",
-                Email = "ligma@balls.com"
-            });
-        }
-
-        [HttpGet("unauthorized")]
-        public async Task<IActionResult> GetForUnautorized()
-        {
-            return Ok(new LoginDto{
-                Password = "password123",
-                Email = "ligma@balls.com"
-            });
-        }
     }
 }
