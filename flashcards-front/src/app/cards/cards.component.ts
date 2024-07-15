@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { Card } from '../card';
+import { Card, NewCard } from '../card';
 import { CardService } from '../card.service';
 import { Collection } from '../collection';
 
@@ -23,7 +23,6 @@ export class CardsComponent implements OnInit {
 
   editingCard: boolean = false;
 
-
   constructor(
     private cardService: CardService, 
     private location: Location, 
@@ -44,25 +43,25 @@ export class CardsComponent implements OnInit {
       });
   }
 
-  addCard(frontText: string, backText: string): void {
+  addCard(): void {
     
-    if(!frontText || !backText) {return;}
-    
-    const collId = Number(this.route.snapshot.paramMap.get("id"));
-    console.log("collection id: " + collId);
-    
-    const newCard: Card = 
-    {
-      id: 0,
-      collectionId: collId,
-      frontText: frontText,
-      backText: backText
-    }
+    console.log("adding"); 
+    if(this.addingCard) {
+      const newCard: NewCard = {
+      collectionId: Number(this.route.snapshot.paramMap.get("id")),
+      frontText: this.frontText!,
+      backText: this.backText!
+    };
+
+    this.cards.push(newCard as Card);
+    this.index = this.cards.length - 1;
 
     this.cardService.addCard(newCard)
-      .subscribe(() => this.cards.push(newCard));
+      .subscribe(() => {console.log("card added");         
+      });   
+    }
 
-    this.addingCard = false;
+    this.addingCard = !this.addingCard;
   }
 
   editCard(): void {
@@ -80,7 +79,7 @@ export class CardsComponent implements OnInit {
           });      
       }
     
-    this.editingCard = !this.editingCard
+    this.editingCard = !this.editingCard;
     console.log("editing"); 
   }
 

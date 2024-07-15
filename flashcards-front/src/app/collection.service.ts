@@ -36,10 +36,6 @@ export class CollectionService {
     return this.http.post<Collection>(this.collectionsUrl + `/share`, share, this.httpOptions);
   }
 
-  getSharedCollections(): Observable<Collection[]> {
-    return this.http.get<Collection[]>(this.collectionsUrl + `/shared`);
-  }
-
   renameCollection(updatedCollection: RenameCollection): Observable<RenameCollection> {
     return this.http.put<RenameCollection>(this.collectionsUrl + `/${updatedCollection.id}`, updatedCollection, this.httpOptions);
   }

@@ -1,9 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
   
+  :root {
+    --backgroundBar: #2E236C;
+    --background: #433D8B;
+    --navButton: #4C3BCF;
+    --navButtonHover: #17153B;
+    --controlsHover: #645db4;
+  }
+
   body {
     display: flex;
     flex-direction: column;
-    background-color: rgb(212, 212, 245);
+    background-color: var(--background);
     height: 100%;
     margin: 0;
     font-family:Verdana, Geneva, Tahoma, sans-serif;

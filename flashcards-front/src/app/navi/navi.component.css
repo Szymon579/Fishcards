@@ -1,5 +1,5 @@
   .navigation {
-    background-color: rgb(11, 133, 133);
+    background-color: var(--backgroundBar);
     height: 100px; 
     display: flex;
     align-items: center;
@@ -14,7 +14,7 @@
     padding: 10px 20px;
     margin: 10px;
     font-size: 30px; 
-    background-color: #007bff; /* Button background color */
+    background-color: var(--navButton); /* Button background color */
     color: white; /* Button text color */
     border: none; /* No border */
     cursor: pointer; 
@@ -23,5 +23,5 @@
   }
   
   .nav-btn:hover {
-    background-color: #0056b3; /* Darker background color on hover */
+    background-color: var(--navButtonHover); /* Darker background color on hover */
   }

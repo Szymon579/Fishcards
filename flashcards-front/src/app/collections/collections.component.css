@@ -26,7 +26,6 @@
     height: 150px;
     display: inline-block;
     background-color: white; /* Background color */
-
     margin: 10px;
     border-radius: 25px;
     box-shadow: 10px 8px 6px rgba(0, 0, 0, 0.1);
@@ -74,7 +73,7 @@
   }
 
   .ctrl-btn:hover { 
-    background-color: #007bff;
+    background-color: var(--controlsHover);
   }
 
   img {

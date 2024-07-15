@@ -18,18 +18,11 @@ export class CollectionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCollections();
-    this.getSharedCollections();
   }
 
   getCollections(): void {
     this.collectionService.getCollections()
       .subscribe(collections => {this.collections = collections;  console.log(collections);
-      });
-  }
-
-  getSharedCollections(): void {
-    this.collectionService.getSharedCollections()
-      .subscribe(shared => {this.collections = this.collections.concat(shared); console.log(shared);
       });
   }
 
@@ -42,13 +35,12 @@ export class CollectionsComponent implements OnInit {
       cards: []
     }
     this.collectionService.addCollection(newCollection)
-      .subscribe(coll => this.collections.push(newCollection));
+      .subscribe(() => this.collections.push(newCollection));
   }
 
   deleteCollection(id: number): void {
     this.collections = this.collections.filter(deletedColl => deletedColl.id !== id);
-    this.collectionService.deleteCollection(id).subscribe();
-    
+    this.collectionService.deleteCollection(id).subscribe(); 
   }
 
   renameCollection(collectionId: number, newTitle: string): void {

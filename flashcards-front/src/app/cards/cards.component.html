@@ -1,9 +1,11 @@
 <div class="wrapper">
-  <button type="button" class="nav-btn" (click)="showPrevious()"><</button>
+  <button type="button" class="nav-btn" (click)="showPrevious()">
+    <img src="./assets/left.png" />
+  </button>
 
   <div class="card-wrapper">
     
-    <div *ngIf="!editingCard" class="card" [class.flip]="!showFront" (click)="flipCard()">
+    <div *ngIf="!editingCard && !addingCard" class="card" [class.flip]="!showFront" (click)="flipCard()">
       <div *ngIf="showFront" class="card-front">
         {{ frontText }}
       </div>
@@ -12,27 +14,37 @@
       </div>
     </div>
     
-    <div *ngIf="editingCard" class="card" [class.flip]="!showFront" (click)="flipCard()">
+    <div *ngIf="addingCard" class="card" [class.flip]="!showFront" (click)="flipCard()">
       <div *ngIf="showFront" class="card-front">
-        <textarea #frontTextArea (focusout)="this.frontText = frontTextArea.value" value="{{frontText}}" (click)="$event.stopPropagation()">
+        <textarea #frontTextArea (focusout)="this.frontText = frontTextArea.value" value="{{this.frontText}}" (click)="$event.stopPropagation()">
           {{frontTextArea.focus()}}
         </textarea>
         
       </div>
       <div *ngIf="!showFront" class="card-back">
-        <textarea #backTextArea (focusout)="this.backText = backTextArea.value" value="{{backText}}" (click)="$event.stopPropagation()">
+        <textarea #backTextArea (focusout)="this.backText = backTextArea.value" value="{{this.backText}}" (click)="$event.stopPropagation()">
+          {{backTextArea.focus()}}
+        </textarea>
+      </div>
+    </div>
+    
+    <div *ngIf="editingCard" class="card" [class.flip]="!showFront" (click)="flipCard()">
+      <div *ngIf="showFront" class="card-front">
+        <textarea #frontTextArea  (focusout)="this.frontText = frontTextArea.value" value="{{frontText}}" (click)="$event.stopPropagation()">
+          {{frontTextArea.focus()}}
+        </textarea>
+        
+      </div>
+      <div *ngIf="!showFront" class="card-back">
+        <textarea #backTextArea  (focusout)="this.backText = backTextArea.value" value="{{backText}}" (click)="$event.stopPropagation()">
           {{backTextArea.focus()}}
         </textarea>
       </div>
     </div>
 
-    
-    <div *ngIf="!addingCard" class="controls">
-      <button class="ctrl-btn" (click)="addingCard = true">
+    <div class="controls">
+      <button class="ctrl-btn" (click)="addCard(); this.frontText=''; this.backText=''"  [class.toggled]="addingCard">
         <img src="./assets/add.png" />
-      </button>
-      <button class="ctrl-btn">
-        <img src="./assets/hide.png" />
       </button>
       <button class="ctrl-btn" (click)="editCard()" [class.toggled]="editingCard">
         <img src="./assets/edit.png" />
@@ -44,5 +56,7 @@
 
   </div>
 
-  <button type="button" class="nav-btn" (click)="showNext()">></button>
+  <button type="button" class="nav-btn" (click)="showNext()">
+    <img src="./assets/right.png" />
+  </button>
 </div>

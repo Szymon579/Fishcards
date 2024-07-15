@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Card } from './card';
+import { Card, NewCard } from './card';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map, pipe } from 'rxjs';
 
@@ -19,10 +19,10 @@ export class CardService {
     return this.http.get<Card[]>(this.cardsByCollectionUrl + `/${collectionId}`);
   }
 
-  addCard(card: Card): Observable<Card> {
+  addCard(card: NewCard): Observable<NewCard> {
     console.log("in service");
     console.log(card);
-    return this.http.post<Card>(this.cardsUrl, card, this.httpOptions);
+    return this.http.post<NewCard>(this.cardsUrl, card, this.httpOptions);
   }
 
   editCard(id: number, card: Card): Observable<Card> {
