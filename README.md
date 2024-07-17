@@ -18,6 +18,32 @@ Web app for flashcards
 - Sharing collections with different users
 
 
+## Launch
+
+To deploy this project run
+
+- Create database
+- Update connection string
+```CMD
+    ..\Flashcards\flashcards-back\api\appsettings.json
+```
+```json
+   "DefaultConnection": "Data Source=<host-name>\\SQLEXPRESS; Initial Catalog=<database name>;..."
+```
+- Make migrations
+```CMD
+    ..\Flashcards\flashcards-back\api>dotnet-ef database update
+```
+- Run backend server
+```CMD
+   ..\Flashcards\flashcards-back\api>dotnet run 
+```
+- Run frontend server
+```CMD
+    ..\Flashcards\flashcards-front>ng serve -o
+```
+
+
 ## Demo
 ![Alt text](/../master/screenshots/login.png?raw=true "Login page")
 
