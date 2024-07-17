@@ -3,11 +3,11 @@
 Web app for flashcards
 
 
-## Stack
+## Technologies
 
 - Frontend - Angular
 - Backend - ASP.NET
-- Database - MySQL
+- Database - MS SQL Express
 
 
 ## Features
@@ -18,11 +18,9 @@ Web app for flashcards
 - Sharing collections with different users
 
 
-## Launch
+## Launching
 
-To deploy this project run
-
-- Create database
+- Initialize MS SQL database
 - Update connection string
 ```CMD
     ..\Flashcards\flashcards-back\api\appsettings.json
